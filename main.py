@@ -1,4 +1,9 @@
-from tkinter import *
+import sys
+try:
+		from tkinter import *
+except ImportError:
+		print("tkinter not found.\nOn debian-like distributions install with:\napt install python3-tk")
+		sys.exit(0)
 from PIL import Image, ImageDraw, ImageFont, ImageTk
 
 master = Tk()
