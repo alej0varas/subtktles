@@ -72,6 +72,7 @@ _family_set.sort()
 family_set = [f.split('/')[-1].split('.')[0] for f in _family_set]
 for name in family_set:
     entry_text_font.insert(tk.END, name)
+entry_text_font.selection_set(0)
 
 #
 # Callbacks
@@ -82,10 +83,6 @@ def callback():
         canvas_y = int(canvas_height.get())
     except ValueError:
         return
-    try:
-        font = _family_set[entry_text_font.curselection()[0]]
-    except IndexError:
-        return
     base = Image.new('RGBA', (canvas_x, canvas_y))
 
     # make a blank image for the text, initialized to transparent text color
@@ -94,6 +91,7 @@ def callback():
     txt = Image.new('RGBA', base.size, canvas_background)
 
     # get a font
+    font = _family_set[entry_text_font.curselection()[0]]
     fnt = ImageFont.truetype(font=font, size=text_size.get())
     # get a drawing context
     d = ImageDraw.Draw(txt)
