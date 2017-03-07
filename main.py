@@ -1,13 +1,13 @@
 import itertools
 import sys
 
-
 try:
     from tkinter import *
 except ImportError:
     print("tkinter not found.\nOn debian-like distributions install with:\napt install python3-tk")
     sys.exit(0)
-
+import matplotlib.font_manager
+import tkinter.font
 from PIL import Image, ImageDraw, ImageFont, ImageTk
 
 
@@ -47,6 +47,7 @@ label_text_color_G = Label(master, text="color G")
 label_text_color_B = Label(master, text="color B")
 label_text_opacity = Label(master, text="opacity")
 label_text_size = Label(master, text="size")
+label_text_font = Label(master, text="font")
 label_text_content = Label(master, text="text")
 
 #
@@ -63,7 +64,14 @@ entry_text_color_G = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue
 entry_text_color_B = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=text_color_B)
 entry_text_opacity = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=text_opacity)
 entry_text_size = Scale(master, from_=10, to=100, orient=HORIZONTAL, showvalue=0, variable=text_size)
+entry_text_font = Listbox(master)
 entry_text = Entry(master, textvariable=text)
+
+_family_set = matplotlib.font_manager.findSystemFonts()
+_family_set.sort()
+family_set = [f.split('/')[-1].split('.')[0] for f in _family_set]
+for name in family_set:
+    entry_text_font.insert(END, name)
 
 #
 # Callbacks
@@ -74,6 +82,10 @@ def callback():
         canvas_y = int(canvas_height.get())
     except ValueError:
         return
+    try:
+        font = _family_set[entry_text_font.curselection()[0]]
+    except IndexError:
+        return
     base = Image.new('RGBA', (canvas_x, canvas_y))
 
     # make a blank image for the text, initialized to transparent text color
@@ -82,7 +94,7 @@ def callback():
     txt = Image.new('RGBA', base.size, canvas_background)
 
     # get a font
-    fnt = ImageFont.truetype('FreeMono.ttf', text_size.get())
+    fnt = ImageFont.truetype(font=font, size=text_size.get())
     # get a drawing context
     d = ImageDraw.Draw(txt)
 
@@ -117,6 +129,8 @@ text_color_B.trace("w", crazy)
 text_opacity.trace("w", crazy)
 text_size.trace("w", crazy)
 text.trace("w", crazy)
+master.bind("<Button-1>", crazy)
+master.bind("<Key>", crazy)
 
 #
 # Buttons
@@ -139,6 +153,7 @@ label_text_color_G.grid(sticky=E+N)
 label_text_color_B.grid(sticky=E+N)
 label_text_opacity.grid(sticky=E+N)
 label_text_size.grid(sticky=E+N)
+label_text_font.grid(sticky=E+N)
 label_text_content.grid(sticky=E+N)
 
 ROW = itertools.count(start=1)
@@ -155,6 +170,7 @@ entry_text_color_G.grid(row=next(ROW), column=1, sticky=N)
 entry_text_color_B.grid(row=next(ROW), column=1, sticky=N)
 entry_text_opacity.grid(row=next(ROW), column=1, sticky=N)
 entry_text_size.grid(row=next(ROW), column=1, sticky=N)
+entry_text_font.grid(row=next(ROW), column=1, sticky=N)
 LAST_ROW = next(ROW)
 entry_text.grid(row=LAST_ROW, column=1, sticky=E)
 
