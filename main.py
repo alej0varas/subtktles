@@ -1,3 +1,4 @@
+import itertools
 import sys
 
 
@@ -12,6 +13,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageTk
 
 master = Tk()
 
+
 #
 # Variables
 #
@@ -25,6 +27,7 @@ text_color_R = IntVar()
 text_color_G = IntVar()
 text_color_B = IntVar()
 text_opacity = IntVar()
+text_size = IntVar()
 text = StringVar()
 image = None
 
@@ -43,6 +46,7 @@ label_text_color_R = Label(master, text="color R")
 label_text_color_G = Label(master, text="color G")
 label_text_color_B = Label(master, text="color B")
 label_text_opacity = Label(master, text="opacity")
+label_text_size = Label(master, text="size")
 label_text_content = Label(master, text="text")
 
 #
@@ -88,6 +92,7 @@ entry_text_color_R = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue
 entry_text_color_G = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=text_color_G)
 entry_text_color_B = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=text_color_B)
 entry_text_opacity = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=text_opacity)
+entry_text_size = Scale(master, from_=10, to=100, orient=HORIZONTAL, showvalue=0, variable=text_size)
 entry_text = Entry(master, textvariable=text)
 
 #
@@ -107,7 +112,7 @@ def callback():
     txt = Image.new('RGBA', base.size, canvas_background)
 
     # get a font
-    fnt = ImageFont.truetype('FreeMono.ttf', 40)
+    fnt = ImageFont.truetype('FreeMono.ttf', text_size.get())
     # get a drawing context
     d = ImageDraw.Draw(txt)
 
@@ -122,6 +127,26 @@ def callback():
     global image
     image = ImageTk.PhotoImage(out)
     canvas.config(image=image)
+
+
+def crazy(*args):
+    callback()
+
+#
+# Bindings
+#
+canvas_width.trace("w", crazy)
+canvas_height.trace("w", crazy)
+canvas_color_R.trace("w", crazy)
+canvas_color_G.trace("w", crazy)
+canvas_color_B.trace("w", crazy)
+canvas_opacity.trace("w", crazy)
+text_color_R.trace("w", crazy)
+text_color_G.trace("w", crazy)
+text_color_B.trace("w", crazy)
+text_opacity.trace("w", crazy)
+text_size.trace("w", crazy)
+text.trace("w", crazy)
 
 #
 # Buttons
@@ -145,24 +170,33 @@ label_text_color_B.grid(sticky=E+N)
 label_text_opacity.grid(sticky=E+N)
 label_text_content.grid(sticky=E+N)
 
-entry_canvas_width.grid(row=1, column=1, sticky=N)
-entry_canvas_height.grid(row=2, column=1, sticky=N)
-entry_canvas_color_R.grid(row=3, column=1, sticky=N)
-entry_canvas_color_G.grid(row=4, column=1, sticky=N)
-entry_canvas_color_B.grid(row=5, column=1, sticky=N)
-entry_canvas_opacity.grid(row=6, column=1, sticky=N)
-entry_text_color_R.grid(row=8, column=1, sticky=N)
-entry_text_color_G.grid(row=9, column=1, sticky=N)
-entry_text_color_B.grid(row=10, column=1, sticky=N)
-entry_text_opacity.grid(row=11, column=1, sticky=N)
-entry_text.grid(row=12, column=1, sticky=E)
+ROW = itertools.count(start=1)
 
-# A label works better than a `Canvas`.
+entry_canvas_width.grid(row=next(ROW), column=1, sticky=N)
+entry_canvas_height.grid(row=next(ROW), column=1, sticky=N)
+entry_canvas_color_R.grid(row=next(ROW), column=1, sticky=N)
+entry_canvas_color_G.grid(row=next(ROW), column=1, sticky=N)
+entry_canvas_color_B.grid(row=next(ROW), column=1, sticky=N)
+entry_canvas_opacity.grid(row=next(ROW), column=1, sticky=N)
+next(ROW)
+entry_text_color_R.grid(row=next(ROW), column=1, sticky=N)
+entry_text_color_G.grid(row=next(ROW), column=1, sticky=N)
+entry_text_color_B.grid(row=next(ROW), column=1, sticky=N)
+entry_text_opacity.grid(row=next(ROW), column=1, sticky=N)
+entry_text_size.grid(row=next(ROW), column=1, sticky=N)
+LAST_ROW = next(ROW)
+entry_text.grid(row=LAST_ROW, column=1, sticky=E)
+
+# A label works better than a `Canvas`. Canvas doesn't support transparency.
 canvas = Label(master)
 canvas.grid(row=0, column=2, columnspan=2, rowspan=10, sticky=W+E+N+S, padx=5, pady=5)
-button.grid(row=12, column=3, rowspan=2)
+button.grid(row=LAST_ROW, column=3, rowspan=2)
 
 #
 # Init
 #
+
+# master.bind("<Button-1>", crazy)
+# master.bind("<Key>", crazy)
+
 master.mainloop()
