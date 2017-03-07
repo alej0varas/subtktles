@@ -1,10 +1,14 @@
 import sys
+
+
 try:
-		from tkinter import *
+    from tkinter import *
 except ImportError:
-		print("tkinter not found.\nOn debian-like distributions install with:\napt install python3-tk")
-		sys.exit(0)
+    print("tkinter not found.\nOn debian-like distributions install with:\napt install python3-tk")
+    sys.exit(0)
+
 from PIL import Image, ImageDraw, ImageFont, ImageTk
+
 
 master = Tk()
 
@@ -44,7 +48,6 @@ label_text_content = Label(master, text="text")
 #
 # Validators
 #
-
 def int_validator(value):
     try:
         if value:
@@ -67,7 +70,6 @@ def canvas_height_validator(value):
     if not result:
         canvas_height.set('')
     return result
-
 
 # https://stackoverflow.com/questions/4140437/interactively-validating-entry-widget-content-in-tkinter#4140988
 vcmd_cwv = (master.register(canvas_width_validator), '%S')
@@ -102,7 +104,6 @@ def callback():
     # make a blank image for the text, initialized to transparent text color
     background_opacity = canvas_opacity.get()
     canvas_background = (canvas_color_R.get(), canvas_color_G.get(), canvas_color_B.get(), background_opacity)
-    print(canvas_background)
     txt = Image.new('RGBA', base.size, canvas_background)
 
     # get a font
@@ -112,29 +113,24 @@ def callback():
 
     # draw text, half opacity
     text_fill = (text_color_R.get(), text_color_G.get(), text_color_B.get(), text_opacity.get())
-    print(text_fill)
     d.text((10,10), text.get(), font=fnt, fill=text_fill)
 
     out = Image.alpha_composite(base, txt)
     out.save('lena_out.png')
 
+    # keeping a reference to the image is required
     global image
     image = ImageTk.PhotoImage(out)
-    # canvas.config(width=canvas_width.get(), height=canvas_height.get())
-    # canvas.create_image((0, 0), image=image)
     canvas.config(image=image)
-    print('yahooo')
 
 #
 # Buttons
 #
-
-button = Button(text='hi!', command=callback)
+button = Button(text='Tengo hambre!', command=callback)
 
 #
 # layout
 #
-
 label_canvas.grid()
 label_canvas_width.grid(sticky=E+N)
 label_canvas_height.grid(sticky=E+N)
@@ -161,15 +157,12 @@ entry_text_color_B.grid(row=10, column=1, sticky=N)
 entry_text_opacity.grid(row=11, column=1, sticky=N)
 entry_text.grid(row=12, column=1, sticky=E)
 
-# canvas = Canvas(master, width=200, height=200)
-canvas = Label(master)  #, width=200, height=200)
-canvas.grid(row=0, column=2, columnspan=2, rowspan=10, sticky=W+E+N+S, padx=5,
-            pady=5)
+# A label works better than a `Canvas`.
+canvas = Label(master)
+canvas.grid(row=0, column=2, columnspan=2, rowspan=10, sticky=W+E+N+S, padx=5, pady=5)
 button.grid(row=12, column=3, rowspan=2)
-
-
-master.mainloop()
 
 #
 # Init
 #
+master.mainloop()
