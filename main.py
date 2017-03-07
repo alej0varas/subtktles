@@ -50,40 +50,10 @@ label_text_size = Label(master, text="size")
 label_text_content = Label(master, text="text")
 
 #
-# Validators
-#
-def int_validator(value):
-    try:
-        if value:
-            v = int(value)
-            return True
-    except ValueError:
-        return False
-    return False
-
-
-def canvas_width_validator(value):
-    result = int_validator(value)
-    if not result:
-        canvas_width.set('')
-    return result
-
-
-def canvas_height_validator(value):
-    result = int_validator(value)
-    if not result:
-        canvas_height.set('')
-    return result
-
-# https://stackoverflow.com/questions/4140437/interactively-validating-entry-widget-content-in-tkinter#4140988
-vcmd_cwv = (master.register(canvas_width_validator), '%S')
-vcmd_chv = (master.register(canvas_height_validator), '%S')
-
-#
 # Inputs
 #
-entry_canvas_width = Entry(master, textvariable=canvas_width, validatecommand=vcmd_cwv, validate='key')
-entry_canvas_height = Entry(master, textvariable=canvas_height, validatecommand=vcmd_chv, validate='key')
+entry_canvas_width = Scale(master, from_=320, to=1900, orient=HORIZONTAL, variable=canvas_width)
+entry_canvas_height = Scale(master, from_=160, to=720, orient=HORIZONTAL, variable=canvas_height)
 entry_canvas_color_R = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=canvas_color_R)
 entry_canvas_color_G = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=canvas_color_G)
 entry_canvas_color_B = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=canvas_color_B)
@@ -168,6 +138,7 @@ label_text_color_R.grid(sticky=E+N)
 label_text_color_G.grid(sticky=E+N)
 label_text_color_B.grid(sticky=E+N)
 label_text_opacity.grid(sticky=E+N)
+label_text_size.grid(sticky=E+N)
 label_text_content.grid(sticky=E+N)
 
 ROW = itertools.count(start=1)
@@ -195,8 +166,4 @@ button.grid(row=LAST_ROW, column=3, rowspan=2)
 #
 # Init
 #
-
-# master.bind("<Button-1>", crazy)
-# master.bind("<Key>", crazy)
-
 master.mainloop()
