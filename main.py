@@ -2,7 +2,7 @@ import itertools
 import sys
 
 try:
-    from tkinter import *
+    import tkinter as tk
 except ImportError:
     print("tkinter not found.\nOn debian-like distributions install with:\napt install python3-tk")
     sys.exit(0)
@@ -11,67 +11,67 @@ import tkinter.font
 from PIL import Image, ImageDraw, ImageFont, ImageTk
 
 
-master = Tk()
+master = tk.Tk()
 
 
 #
 # Variables
 #
-canvas_width = StringVar()
-canvas_height = StringVar()
-canvas_color_R = IntVar()
-canvas_color_G = IntVar()
-canvas_color_B = IntVar()
-canvas_opacity = IntVar()
-text_color_R = IntVar()
-text_color_G = IntVar()
-text_color_B = IntVar()
-text_opacity = IntVar()
-text_size = IntVar()
-text = StringVar()
+canvas_width = tk.StringVar()
+canvas_height = tk.StringVar()
+canvas_color_R = tk.IntVar()
+canvas_color_G = tk.IntVar()
+canvas_color_B = tk.IntVar()
+canvas_opacity = tk.IntVar()
+text_color_R = tk.IntVar()
+text_color_G = tk.IntVar()
+text_color_B = tk.IntVar()
+text_opacity = tk.IntVar()
+text_size = tk.IntVar()
+text = tk.StringVar()
 image = None
 
 #
 # Labels
 #
-label_canvas = Label(master, text="CANVAS")
-label_canvas_width = Label(master, text="width")
-label_canvas_height = Label(master, text="height")
-label_canvas_color_R = Label(master, text="color R")
-label_canvas_color_G = Label(master, text="color G")
-label_canvas_color_B = Label(master, text="color B")
-label_canvas_opacity = Label(master, text="opacity")
-label_text = Label(master, text="TEXT")
-label_text_color_R = Label(master, text="color R")
-label_text_color_G = Label(master, text="color G")
-label_text_color_B = Label(master, text="color B")
-label_text_opacity = Label(master, text="opacity")
-label_text_size = Label(master, text="size")
-label_text_font = Label(master, text="font")
-label_text_content = Label(master, text="text")
+label_canvas = tk.Label(master, text="CANVAS")
+label_canvas_width = tk.Label(master, text="width")
+label_canvas_height = tk.Label(master, text="height")
+label_canvas_color_R = tk.Label(master, text="color R")
+label_canvas_color_G = tk.Label(master, text="color G")
+label_canvas_color_B = tk.Label(master, text="color B")
+label_canvas_opacity = tk.Label(master, text="opacity")
+label_text = tk.Label(master, text="TEXT")
+label_text_color_R = tk.Label(master, text="color R")
+label_text_color_G = tk.Label(master, text="color G")
+label_text_color_B = tk.Label(master, text="color B")
+label_text_opacity = tk.Label(master, text="opacity")
+label_text_size = tk.Label(master, text="size")
+label_text_font = tk.Label(master, text="font")
+label_text_content = tk.Label(master, text="text")
 
 #
 # Inputs
 #
-entry_canvas_width = Scale(master, from_=320, to=1900, orient=HORIZONTAL, variable=canvas_width)
-entry_canvas_height = Scale(master, from_=160, to=720, orient=HORIZONTAL, variable=canvas_height)
-entry_canvas_color_R = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=canvas_color_R)
-entry_canvas_color_G = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=canvas_color_G)
-entry_canvas_color_B = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=canvas_color_B)
-entry_canvas_opacity = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=canvas_opacity)
-entry_text_color_R = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=text_color_R)
-entry_text_color_G = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=text_color_G)
-entry_text_color_B = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=text_color_B)
-entry_text_opacity = Scale(master, from_=0, to=255, orient=HORIZONTAL, showvalue=0, variable=text_opacity)
-entry_text_size = Scale(master, from_=10, to=100, orient=HORIZONTAL, showvalue=0, variable=text_size)
-entry_text_font = Listbox(master)
-entry_text = Entry(master, textvariable=text)
+entry_canvas_width = tk.Scale(master, from_=320, to=1900, orient=tk.HORIZONTAL, variable=canvas_width)
+entry_canvas_height = tk.Scale(master, from_=160, to=720, orient=tk.HORIZONTAL, variable=canvas_height)
+entry_canvas_color_R = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, showvalue=0, variable=canvas_color_R)
+entry_canvas_color_G = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, showvalue=0, variable=canvas_color_G)
+entry_canvas_color_B = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, showvalue=0, variable=canvas_color_B)
+entry_canvas_opacity = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, showvalue=0, variable=canvas_opacity)
+entry_text_color_R = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, showvalue=0, variable=text_color_R)
+entry_text_color_G = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, showvalue=0, variable=text_color_G)
+entry_text_color_B = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, showvalue=0, variable=text_color_B)
+entry_text_opacity = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, showvalue=0, variable=text_opacity)
+entry_text_size = tk.Scale(master, from_=10, to=100, orient=tk.HORIZONTAL, showvalue=0, variable=text_size)
+entry_text_font = tk.Listbox(master)
+entry_text = tk.Entry(master, textvariable=text)
 
 _family_set = matplotlib.font_manager.findSystemFonts()
 _family_set.sort()
 family_set = [f.split('/')[-1].split('.')[0] for f in _family_set]
 for name in family_set:
-    entry_text_font.insert(END, name)
+    entry_text_font.insert(tk.END, name)
 
 #
 # Callbacks
@@ -135,48 +135,48 @@ master.bind("<Key>", crazy)
 #
 # Buttons
 #
-button = Button(text='Tengo hambre!', command=callback)
+button = tk.Button(text='Tengo hambre!', command=callback)
 
 #
 # layout
 #
 label_canvas.grid()
-label_canvas_width.grid(sticky=E+N)
-label_canvas_height.grid(sticky=E+N)
-label_canvas_color_R.grid(sticky=E+N)
-label_canvas_color_G.grid(sticky=E+N)
-label_canvas_color_B.grid(sticky=E+N)
-label_canvas_opacity.grid(sticky=E+N)
+label_canvas_width.grid(sticky=tk.E+tk.N)
+label_canvas_height.grid(sticky=tk.E+tk.N)
+label_canvas_color_R.grid(sticky=tk.E+tk.N)
+label_canvas_color_G.grid(sticky=tk.E+tk.N)
+label_canvas_color_B.grid(sticky=tk.E+tk.N)
+label_canvas_opacity.grid(sticky=tk.E+tk.N)
 label_text.grid()
-label_text_color_R.grid(sticky=E+N)
-label_text_color_G.grid(sticky=E+N)
-label_text_color_B.grid(sticky=E+N)
-label_text_opacity.grid(sticky=E+N)
-label_text_size.grid(sticky=E+N)
-label_text_font.grid(sticky=E+N)
-label_text_content.grid(sticky=E+N)
+label_text_color_R.grid(sticky=tk.E+tk.N)
+label_text_color_G.grid(sticky=tk.E+tk.N)
+label_text_color_B.grid(sticky=tk.E+tk.N)
+label_text_opacity.grid(sticky=tk.E+tk.N)
+label_text_size.grid(sticky=tk.E+tk.N)
+label_text_font.grid(sticky=tk.E+tk.N)
+label_text_content.grid(sticky=tk.E+tk.N)
 
 ROW = itertools.count(start=1)
 
-entry_canvas_width.grid(row=next(ROW), column=1, sticky=N)
-entry_canvas_height.grid(row=next(ROW), column=1, sticky=N)
-entry_canvas_color_R.grid(row=next(ROW), column=1, sticky=N)
-entry_canvas_color_G.grid(row=next(ROW), column=1, sticky=N)
-entry_canvas_color_B.grid(row=next(ROW), column=1, sticky=N)
-entry_canvas_opacity.grid(row=next(ROW), column=1, sticky=N)
+entry_canvas_width.grid(row=next(ROW), column=1, sticky=tk.N)
+entry_canvas_height.grid(row=next(ROW), column=1, sticky=tk.N)
+entry_canvas_color_R.grid(row=next(ROW), column=1, sticky=tk.N)
+entry_canvas_color_G.grid(row=next(ROW), column=1, sticky=tk.N)
+entry_canvas_color_B.grid(row=next(ROW), column=1, sticky=tk.N)
+entry_canvas_opacity.grid(row=next(ROW), column=1, sticky=tk.N)
 next(ROW)
-entry_text_color_R.grid(row=next(ROW), column=1, sticky=N)
-entry_text_color_G.grid(row=next(ROW), column=1, sticky=N)
-entry_text_color_B.grid(row=next(ROW), column=1, sticky=N)
-entry_text_opacity.grid(row=next(ROW), column=1, sticky=N)
-entry_text_size.grid(row=next(ROW), column=1, sticky=N)
-entry_text_font.grid(row=next(ROW), column=1, sticky=N)
+entry_text_color_R.grid(row=next(ROW), column=1, sticky=tk.N)
+entry_text_color_G.grid(row=next(ROW), column=1, sticky=tk.N)
+entry_text_color_B.grid(row=next(ROW), column=1, sticky=tk.N)
+entry_text_opacity.grid(row=next(ROW), column=1, sticky=tk.N)
+entry_text_size.grid(row=next(ROW), column=1, sticky=tk.N)
+entry_text_font.grid(row=next(ROW), column=1, sticky=tk.N)
 LAST_ROW = next(ROW)
-entry_text.grid(row=LAST_ROW, column=1, sticky=E)
+entry_text.grid(row=LAST_ROW, column=1, sticky=tk.E)
 
 # A label works better than a `Canvas`. Canvas doesn't support transparency.
-canvas = Label(master)
-canvas.grid(row=0, column=2, columnspan=2, rowspan=10, sticky=W+E+N+S, padx=5, pady=5)
+canvas = tk.Label(master)
+canvas.grid(row=0, column=2, columnspan=2, rowspan=10, sticky=tk.W+tk.E+tk.N+tk.S, padx=5, pady=5)
 button.grid(row=LAST_ROW, column=3, rowspan=2)
 
 #
