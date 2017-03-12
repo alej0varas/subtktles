@@ -98,9 +98,32 @@ def callback():
     # get a drawing context
     d = ImageDraw.Draw(txt)
 
-    # draw text, half opacity
+    # draw text
     text_fill = (text_color_R.get(), text_color_G.get(), text_color_B.get(), text_opacity.get())
-    d.text((10,10), text.get(), font=fnt, fill=text_fill)
+    text_content = text.get()
+    # Wrap lines to canvas width
+    multiline_text = []
+    line = ''
+    words = text_content.split()
+    i = 0
+    while i < len(words):
+        word = words[i]
+        tmp = line + ' ' + word
+        size = fnt.getsize(tmp)[0]
+        if size < canvas_x:
+            if multiline_text:
+                multiline_text.pop()
+            line = tmp
+            i += 1
+        else:
+            if not ' ' in line:
+                i = len(words)
+                line = tmp
+            else:
+                line = ''
+        multiline_text.append(line)
+    multiline_text = '\n'.join(multiline_text)
+    d.multiline_text((0, 0), multiline_text, font=fnt, fill=text_fill)
 
     out = Image.alpha_composite(base, txt)
     out.save('lena_out.png')
