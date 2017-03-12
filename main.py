@@ -64,7 +64,9 @@ entry_text_color_G = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, sho
 entry_text_color_B = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, showvalue=0, variable=text_color_B)
 entry_text_opacity = tk.Scale(master, from_=0, to=255, orient=tk.HORIZONTAL, showvalue=0, variable=text_opacity)
 entry_text_size = tk.Scale(master, from_=10, to=100, orient=tk.HORIZONTAL, showvalue=0, variable=text_size)
-entry_text_font = tk.Listbox(master)
+# Why `exportselection`
+# https://bytes.com/topic/python/answers/20254-tkinter-listbox-looses-selection-tab
+entry_text_font = tk.Listbox(master, exportselection=0)
 entry_text = tk.Entry(master, textvariable=text)
 
 _family_set = matplotlib.font_manager.findSystemFonts()
